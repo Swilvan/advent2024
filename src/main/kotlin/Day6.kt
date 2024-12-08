@@ -56,11 +56,19 @@ class Guard(val map: List<List<String>>) {
 data class VisitedPosition(val p: Position, val direction: Direction)
 
 data class Position(val x: Int, val y: Int) {
+
+    operator fun unaryMinus() = Position(-x, -y)
+
     operator fun minus(other: Position): Position =
         Position(this.x - other.x, this.y - other.y)
 
     operator fun plus(other: Position): Position =
         Position(this.x + other.x, this.y + other.y)
+
+    operator fun compareTo(other: Position): Int =
+        if (this.x > other.x || this.y > other.y) 1
+        else if (this.x < other.x || this.y < other.y) -1
+        else 0
 }
 
 enum class Direction {
