@@ -61,11 +61,6 @@ data class Position(val x: Int, val y: Int) {
 
     operator fun plus(other: Position): Position =
         Position(this.x + other.x, this.y + other.y)
-
-    operator fun compareTo(other: Position): Int =
-        if (this.x > other.x && this.y > other.y) 1
-        else if (this.x < other.x && this.y < other.y) -1
-        else 0
 }
 
 enum class Direction {
