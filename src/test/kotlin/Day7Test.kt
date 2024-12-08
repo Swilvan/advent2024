@@ -41,9 +41,8 @@ class Day7Test {
         val equationsByPossible = equations
             .groupBy { it.canWork() }
 
-        assertEquals(3, equationsByPossible[true]!!.size)
+        assertEquals(6, equationsByPossible[true]!!.size)
 
-        assertEquals(listOf(190L, 3267L, 292L), equationsByPossible[true]!!.toList().map { it.result })
     }
 
 

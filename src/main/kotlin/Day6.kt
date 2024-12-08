@@ -8,7 +8,7 @@ fun main() {
     guard.walkUntil()
 //    val vertices = createVertices(guard.map, guard.currentPosition)
 
-        println(guard.visitedPositions.groupBy { it.p }.size)
+    println(guard.visitedPositions.groupBy { it.p }.size)
 
 //    println(input.mapIndexed{ y, line -> line.mapIndexed { x, c -> if(guard.loopOptions.contains(Position(x, y))) "0" else c  }})
     println(guard.loopOptions.size)
@@ -40,7 +40,7 @@ class Guard(val map: List<List<String>>) {
         while (isInsideMap(currentPosition, map)) {
             if (direction.isBlocked(currentPosition, map)) direction = direction.changeDirection()
             else {
-                if(direction.isInLine(currentPosition, visitedPositions)){
+                if (direction.isInLine(currentPosition, visitedPositions)) {
                     loopOptions.add(direction.takeStep(currentPosition))
                 }
                 visitedPositions.add(VisitedPosition(currentPosition, direction))
@@ -55,7 +55,18 @@ class Guard(val map: List<List<String>>) {
 
 data class VisitedPosition(val p: Position, val direction: Direction)
 
-data class Position(val x: Int, val y: Int)
+data class Position(val x: Int, val y: Int) {
+    operator fun minus(other: Position): Position =
+        Position(this.x - other.x, this.y - other.y)
+
+    operator fun plus(other: Position): Position =
+        Position(this.x + other.x, this.y + other.y)
+
+    operator fun compareTo(other: Position): Int =
+        if (this.x > other.x && this.y > other.y) 1
+        else if (this.x < other.x && this.y < other.y) -1
+        else 0
+}
 
 enum class Direction {
 
@@ -71,7 +82,7 @@ enum class Direction {
         override fun changeDirection(): Direction = RIGHT
 
         override fun isInLine(current: Position, visitedPositions: Set<VisitedPosition>) =
-            visitedPositions.firstOrNull { visp -> visp.p.y == current.y && visp.p.x > current.x && visp.direction == changeDirection()}!= null
+            visitedPositions.firstOrNull { visp -> visp.p.y == current.y && visp.p.x > current.x && visp.direction == changeDirection() } != null
 
     },
     DOWN {
@@ -84,7 +95,7 @@ enum class Direction {
 
         override fun changeDirection(): Direction = LEFT
         override fun isInLine(current: Position, visitedPositions: Set<VisitedPosition>) =
-            visitedPositions.firstOrNull { visp -> visp.p.y == current.y && visp.p.x < current.x && visp.direction == changeDirection()} != null
+            visitedPositions.firstOrNull { visp -> visp.p.y == current.y && visp.p.x < current.x && visp.direction == changeDirection() } != null
     },
     LEFT {
         override fun isBlocked(position: Position, map: List<List<String>>): Boolean =
@@ -96,7 +107,7 @@ enum class Direction {
 
         override fun changeDirection(): Direction = UP
         override fun isInLine(current: Position, visitedPositions: Set<VisitedPosition>) =
-            visitedPositions.firstOrNull { visp -> visp.p.y < current.y && visp.p.x == current.x && visp.direction == changeDirection()} != null
+            visitedPositions.firstOrNull { visp -> visp.p.y < current.y && visp.p.x == current.x && visp.direction == changeDirection() } != null
     },
     RIGHT {
         override fun isBlocked(position: Position, map: List<List<String>>): Boolean =
@@ -108,8 +119,9 @@ enum class Direction {
 
         override fun changeDirection(): Direction =
             DOWN
+
         override fun isInLine(current: Position, visitedPositions: Set<VisitedPosition>) =
-            visitedPositions.firstOrNull { visp -> visp.p.y > current.y && visp.p.x == current.x && visp.direction == changeDirection()} != null
+            visitedPositions.firstOrNull { visp -> visp.p.y > current.y && visp.p.x == current.x && visp.direction == changeDirection() } != null
     };
 
     abstract fun isBlocked(position: Position, map: List<List<String>>): Boolean
