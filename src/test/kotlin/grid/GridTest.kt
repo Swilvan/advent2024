@@ -35,4 +35,18 @@ class GridTest {
 
         assertEquals(listOf(Cell(0, 0, 0)), actual.findCellsWhere { it == 0 })
     }
+
+    @Test
+    fun neighborsFilled() {
+        val grid = gridOfInt(trivialInput)
+
+        val linksBoven = grid.getCell(0, 0)
+        val rechtsOnder = grid.getCell(3, 3)
+
+        assertEquals(listOf(1, 1), linksBoven.neighbours.map { it.value })
+        assertEquals(listOf(5,7), rechtsOnder.neighbours.map { it.value })
+
+        val midden = grid.getCell(1, 1)
+        assertEquals(listOf(7,1,3,1), midden.neighbours.map { it.value })
+    }
 }
