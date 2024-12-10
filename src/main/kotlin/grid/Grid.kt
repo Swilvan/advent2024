@@ -13,17 +13,19 @@ class Grid<T>(val grid: List<List<T>>) {
         val tempCells = grid.mapIndexed { y, row ->
             row.mapIndexed { x, c -> Cell(c, x, y) }
         }
-        cells = tempCells.flatMap() { row ->
+        cells = tempCells.flatMap { row ->
             row.map { cell ->
-                val possibleLocations = listOf(
-                    cell.x + 1 to cell.y,
-                    cell.x - 1 to cell.y,
-                    cell.x to cell.y + 1,
-                    cell.x to cell.y - 1
+                val (x, y) = cell.coordinates
+                val possibleLocations = setOf(
+                    x + 1 to y,
+                    x - 1 to y,
+                    x to y + 1,
+                    x to y - 1
                 ).filter { (0..maxX).contains(it.first) && (0..maxY).contains(it.second) }
-                cell.copy(neighbours = possibleLocations.map {
-                    tempCells[it.first][it.second]
-                })
+                cell.neighbours = possibleLocations.map {
+                    tempCells[it.second][it.first]
+                }.toSet()
+                cell
             }
         }
     }
@@ -39,10 +41,10 @@ class Grid<T>(val grid: List<List<T>>) {
         }
     }
 
-    fun getCell(x: Int, y: Int) = cells.first { it.x == x && it.y == y }
+    fun getCell(x: Int, y: Int) = cells.first { it.coordinates.x == x && it.coordinates.y == y }
 
-    fun findCellsWhere(cellValuePredicate: (T) -> Boolean): List<Cell<T>> =
-        cells.filter { cellValuePredicate.invoke(it.value) }
+    fun findCellsWhere(cellPredicate: (Cell<T>) -> Boolean): List<Cell<T>> =
+        cells.filter(cellPredicate)
 
     override fun equals(other: Any?): Boolean {
         return other is Grid<*> && cells == other.cells
@@ -53,17 +55,29 @@ class Grid<T>(val grid: List<List<T>>) {
     }
 
     override fun toString(): String =
-        cells.groupBy { it.x }.map { it.value.map { cell -> cell.value }.joinToString(" ") }.joinToString("\n")
+        cells.groupBy { it.coordinates.x }.map { it.value.map { cell -> cell.value }.joinToString(" ") }
+            .joinToString("\n")
+
 }
 
-data class Cell<T>(val value: T, val x: Int, val y: Int, val neighbours: List<Cell<T>> = listOf()) {
-    fun is2dNeighbour(other: Cell<T>): Boolean {
-        val (_, x, y) = other
-        return listOf(
-            x - 1 == this.x && y == this.y,
-            x + 1 == this.x && y == this.y,
-            x == this.x && y + 1 == this.y,
-            x == this.x && y - 1 == this.y
-        ).any { it }
+data class Cell<T>(val value: T, val coordinates: Coordinates, var neighbours: Set<Cell<T>> = setOf()) {
+
+    constructor(value: T, x: Int, y: Int) : this(value, Coordinates(x, y))
+
+    override fun equals(other: Any?): Boolean = other is Cell<*> &&
+            value == other.value &&
+            coordinates == other.coordinates
+
+
+    override fun toString(): String {
+        return "Cell($value, $coordinates, neighbours)"
+    }
+
+    override fun hashCode(): Int {
+        var result = value?.hashCode() ?: 0
+        result = 31 * result + coordinates.hashCode()
+        return result
     }
 }
+
+data class Coordinates(val x: Int, val y: Int)

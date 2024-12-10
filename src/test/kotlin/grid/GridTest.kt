@@ -1,6 +1,7 @@
 package grid
 
 import nl.swilvan.grid.Cell
+import nl.swilvan.grid.Coordinates
 import nl.swilvan.grid.Grid
 import nl.swilvan.grid.Grid.Companion.gridOfInt
 import org.junit.jupiter.api.Test
@@ -33,7 +34,7 @@ class GridTest {
             actual
         )
 
-        assertEquals(listOf(Cell(0, 0, 0)), actual.findCellsWhere { it == 0 })
+        assertEquals(listOf(Coordinates(0, 0)), actual.findCellsWhere { it.value == 0 }.map { it.coordinates })
     }
 
     @Test
@@ -44,9 +45,11 @@ class GridTest {
         val rechtsOnder = grid.getCell(3, 3)
 
         assertEquals(listOf(1, 1), linksBoven.neighbours.map { it.value })
-        assertEquals(listOf(5,7), rechtsOnder.neighbours.map { it.value })
+        assertEquals(listOf(7,5), rechtsOnder.neighbours.map { it.value })
 
         val midden = grid.getCell(1, 1)
-        assertEquals(listOf(7,1,3,1), midden.neighbours.map { it.value })
+        assertEquals(listOf(3,1,7,1), midden.neighbours.map { it.value })
+
+        assertEquals(listOf(4,2,6,2), grid.getCell(2,1).neighbours.map { it.value })
     }
 }
