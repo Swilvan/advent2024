@@ -1,7 +1,6 @@
 package nl.swilvan
 
 import java.io.File
-import kotlin.math.min
 
 fun main() {
     val input = File("src/main/resources/day4input").readLines().map { it.split("").filter { it.isNotEmpty() } }

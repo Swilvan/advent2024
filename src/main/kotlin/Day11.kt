@@ -5,23 +5,18 @@ import java.math.BigInteger
 
 fun main() {
     val splitInput = File("src/main/resources/day11input").readLines()[0].split(" ").filter { it.isNotBlank() }
-    val stones = splitInput.map { Stone(it.toLong()) }
+//    val stones = splitInput.map { Stone(it.toLong()) }
     val occurences = mutableMapOf<Long, Long>()
     splitInput.map { it.toLong() }.forEach {
         occurences.merge(it, 1, Long::plus)
     }
 
-
     (0..74).forEach {
         splitNumbers(occurences)
-        if(it == 24)
+        if (it == 24)
             println(occurences.values.sum())
     }
     println(occurences.values.sum())
-
-
-    val bigIntSize = BigInteger.valueOf(stones.size.toLong())
-//    println(bigIntSize.multiply(bigIntSize).multiply(bigIntSize))
 }
 
 fun splitNumbers(occurences: MutableMap<Long, Long>) {
