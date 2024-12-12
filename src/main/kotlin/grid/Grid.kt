@@ -36,7 +36,6 @@ class Grid<T>(val grid: List<List<T>>) {
         fun <T> gridOf(fileLines: List<String>, transform: (String) -> T): Grid<T> {
             val grid = Grid(fileLines.map { fileLine -> fileLine.split("").filter { it.isNotBlank() }.map(transform) })
             println("Creating y: ${fileLines.size} * x: ${fileLines.firstOrNull()?.length ?: 0} grid")
-            println(grid)
             return grid
         }
     }
@@ -55,7 +54,7 @@ class Grid<T>(val grid: List<List<T>>) {
     }
 
     override fun toString(): String =
-        cells.groupBy { it.coordinates.x }.map { it.value.map { cell -> cell.value }.joinToString(" ") }
+        cells.groupBy { it.coordinates.y }.map { it.value.map { cell -> cell.value }.joinToString(" ") }
             .joinToString("\n")
 
 }
