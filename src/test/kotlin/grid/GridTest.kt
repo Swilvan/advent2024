@@ -52,4 +52,11 @@ class GridTest {
 
         assertEquals(listOf(4,2,6,2), grid.getCell(2,1).neighbours.map { it.value })
     }
+
+    @Test
+    fun gridStoresUniqueValues(){
+        val grid = gridOfInt(trivialInput)
+
+        assertEquals(setOf(0,1,2,3,4,5,6,7,8,9), grid.uniqueValues)
+    }
 }

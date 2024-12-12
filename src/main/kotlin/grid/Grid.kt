@@ -3,6 +3,7 @@ package nl.swilvan.grid
 
 class Grid<T>(val grid: List<List<T>>) {
 
+    val uniqueValues: Set<T>
     val cells: List<Cell<T>>
     val maxX: Int
     val maxY: Int
@@ -28,6 +29,7 @@ class Grid<T>(val grid: List<List<T>>) {
                 cell
             }
         }
+        uniqueValues = tempCells.flatMap { it.map { it.value } }.toSet()
     }
 
     companion object {
