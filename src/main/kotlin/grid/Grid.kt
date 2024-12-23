@@ -61,7 +61,7 @@ class Grid<T>(val grid: List<List<T>>) {
 
 }
 
-data class Cell<T>(val value: T, val coordinates: Coordinates, var neighbours: Set<Cell<T>> = setOf()) {
+data class Cell<T>(val value: T, val coordinates: Coordinates, var neighbours: Set<Cell<T>> = setOf(), var seen: Boolean = false) {
 
     constructor(value: T, x: Int, y: Int) : this(value, Coordinates(x, y))
 
